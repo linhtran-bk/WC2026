@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ World Cup 2026 – Bắt Tỷ Số Phan Thiết</title>
+<style>
+  :root {
+    --bg:#f5f5f5;--surface:#fff;--surface2:#f9f9f9;
+    --border:#e0e0e0;--border2:#ccc;
+    --text:#1a1a1a;--text2:#555;--text3:#888;
+    --accent:#1a6fe8;--accent-bg:#e8f0ff;--accent-text:#1a4faa;
+    --ok:#16a34a;--ok-bg:#dcfce7;--ok-bd:#86efac;
+    --warn:#ca8a04;--warn-bg:#fef9c3;--warn-bd:#fde047;
+    --err:#dc2626;--err-bg:#fee2e2;--err-bd:#fca5a5;
+    --r:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  .hdr{background:#1a2540;color:#fff;padding:16px 20px;text-align:center}
+  .hdr h1{font-size:20px;font-weight:700}
+  .hdr p{font-size:13px;opacity:.7;margin-top:4px}
+  .wrap{max-width:700px;margin:0 auto;padding:16px}
+  .tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px}
+  .tab{flex:1;padding:10px 6px;font-size:13px;border:none;background:none;cursor:pointer;color:var(--text2);font-weight:500;border-bottom:2px solid transparent;transition:all .15s}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-bg)}
+  .sec{display:none}.sec.active{display:block}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px}
+  .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+  .rbtn{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;cursor:pointer;text-align:left;transition:all .15s;width:100%}
+  .rbtn:hover{border-color:var(--accent)}
+  .rbtn.done{border-color:var(--ok);background:var(--ok-bg)}
+  .rbtn.lkd{opacity:.6;cursor:not-allowed}
+  .rname{font-size:13px;font-weight:700;color:var(--text)}
+  .rrep{font-size:12px;color:var(--text2);margin-top:2px}
+  .rst{font-size:11px;margin-top:3px}
+  .mi{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;margin-bottom:6px}
+  .mi.lkd{opacity:.55;pointer-events:none}
+  .minfo{flex:1;min-width:0}
+  .mteams{font-size:12px;font-weight:700;color:var(--text)}
+  .mmeta{font-size:11px;color:var(--text3);margin-top:2px}
+  .ltag{font-size:10px;background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-bd);padding:1px 5px;border-radius:4px;margin-left:4px}
+  .sw{display:flex;align-items:center;gap:5px;flex-shrink:0}
+  .sinp{width:34px;height:30px;text-align:center;border:1px solid var(--border2);border-radius:5px;font-size:14px;font-weight:700;background:#fff}
+  .sinp:focus{outline:none;border-color:var(--accent)}
+  .vsep{font-size:11px;color:var(--text3)}
+  .btn{padding:10px 16px;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer}
+  .btn-p{background:var(--accent);color:#fff;width:100%;margin-top:10px}
+  .btn-p:hover{background:#1558c0}
+  .btn-p:disabled{opacity:.45;cursor:not-allowed}
+  .bsm{padding:5px 10px;font-size:12px;border:1px solid var(--border2);border-radius:5px;background:#fff;cursor:pointer}
+  .bsm:hover{background:var(--bg)}
+  .bsm.red{border-color:var(--err-bd);color:var(--err)}
+  .bsm.red:hover{background:var(--err-bg)}
+  .bbk{background:none;border:none;font-size:13px;color:var(--accent);cursor:pointer;padding:0;margin-bottom:12px;display:flex;align-items:center;gap:4px}
+  .pb-w{height:5px;background:var(--border);border-radius:3px;margin-bottom:12px;overflow:hidden}
+  .pb-f{height:100%;background:var(--accent);border-radius:3px;transition:width .4s}
+  .sums{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;flex:1;min-width:90px}
+  .sv{font-size:20px;font-weight:700}
+  .sl{font-size:11px;color:var(--text3);margin-top:2px}
+  table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+  th{text-align:left;padding:8px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px}
+  td{padding:8px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  .tag{font-size:11px;padding:2px 7px;border-radius:10px}
+  .tok{background:var(--ok-bg);color:var(--ok)}
+  .dsep{font-size:12px;font-weight:700;color:var(--text2);padding:10px 0 6px;border-bottom:1px solid var(--border);margin-bottom:8px}
+  .dsep:first-child{padding-top:0}
+  .toast{position:fixed;top:16px;right:16px;padding:10px 16px;border-radius:var(--r);font-size:13px;font-weight:600;z-index:999;display:none;max-width:280px;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+  .toast.show{display:block}
+  .t-ok{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-bd)}
+  .t-err{background:var(--err-bg);color:var(--err);border:1px solid var(--err-bd)}
+  .cinp{padding:7px 10px;border:1px solid var(--border2);border-radius:var(--r);font-size:13px;width:160px}
+  .ar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;margin-bottom:6px}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media(max-width:480px){.hdr h1{font-size:17px}.tab{font-size:12px;padding:9px 4px}.rgrid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>⚽ World Cup 2026 — Vòng 32</h1>
+  <p>Đoàn Phan Thiết · Đoán đúng = 0đ · Sai = +1đ · Tổng kết thứ 7 tuần sau 🍽️</p>
+</div>
+<div class="wrap">
+  <div id="toast" class="toast"></div>
+  <div class="tabs">
+    <button class="tab active" onclick="go('rooms')">🏠 Phòng</button>
+    <button class="tab" onclick="go('actual')">📋 Kết quả</button>
+    <button class="tab" onclick="go('rank')">🏆 Xếp hạng</button>
+    <button class="tab" onclick="go('admin')">⚙️ Quản lý</button>
+  </div>
+
+  <div id="tab-rooms" class="sec active">
+    <div id="rl">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:13px;font-weight:700;color:var(--text2)">Chọn phòng của bạn</span>
+        <span id="rprog" style="font-size:12px;color:var(--text3)"></span>
+      </div>
+      <div class="pb-w"><div class="pb-f" id="pb" style="width:0%"></div></div>
+      <div class="rgrid" id="rg"></div>
+    </div>
+    <div id="rf" style="display:none"></div>
+  </div>
+
+  <div id="tab-actual" class="sec">
+    <div class="card" style="background:var(--warn-bg);border-color:var(--warn-bd);margin-bottom:12px">
+      <p style="font-size:13px;color:var(--warn)">⚠️ Nhập kết quả thực tế sau khi trận kết thúc — ban tổ chức</p>
+    </div>
+    <div id="af"></div>
+    <button class="btn btn-p" onclick="saveActual()">Lưu kết quả thực tế</button>
+  </div>
+
+  <div id="tab-rank" class="sec">
+    <div id="ra"><span class="spin"></span><span style="font-size:13px;color:var(--text3)">Đang tải...</span></div>
+  </div>
+
+  <div id="tab-admin" class="sec">
+    <div class="card" style="background:var(--err-bg);border-color:var(--err-bd);margin-bottom:12px">
+      <p style="font-size:13px;color:var(--err)">🔒 Trang quản lý — chỉ ban tổ chức</p>
+    </div>
+    <p style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px">Khóa thủ công từng trận</p>
+    <div id="al"></div>
+    <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="bsm" onclick="lockAll()">🔒 Khóa tất cả</button>
+      <button class="bsm" onclick="unlockAll()">🔓 Mở tất cả</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROOMS=[
+  {id:1,room:'Phòng 1',rep:'C. KA >'},
+  {id:2,room:'Phòng 2',rep:'Quỳnh'},
+  {id:3,room:'Phòng 3',rep:'LiLi'},
+  {id:4,room:'Phòng 4',rep:'HH'},
+  {id:5,room:'Phòng 5',rep:'ViVi'},
+  {id:6,room:'Phòng 6',rep:'KA <'},
+  {id:7,room:'Phòng 7',rep:'Quân'},
+  {id:8,room:'Phòng 8',rep:'Nhóc'},
+  {id:9,room:'Phòng 9',rep:'BB'},
+  {id:10,room:'Phòng 10',rep:'Phú Phú'},
+  {id:11,room:'Phòng 11',rep:'Héo'},
+  {id:12,room:'Phòng 12',rep:'T. Hạc'},
+  {id:13,room:'Phòng 13',rep:'A. Quyền'},
+  {id:14,room:'Phòng 14',rep:'Thảo'},
+  {id:15,room:'Phòng 15',rep:'Hiếu Cao'},
+  {id:16,room:'Phòng 16',rep:'Khải'},
+  {id:17,room:'Phòng 17',rep:'Hột mít'},
+  {id:18,room:'Phòng 18',rep:'Doanh'},
+  {id:19,room:'Phòng 19',rep:'PU'},
+  {id:20,room:'Phòng 20',rep:'Quang'},
+  {id:21,room:'Phòng 21',rep:'a. Luật'},
+];
+
+const MATCHES=[
+  {id:'m73',home:'Nam Phi',away:'Canada',time:'28/6 03:00',note:'Los Angeles',date:'28/6'},
+  {id:'m74',home:'Đức',away:'Top 3 (A/B/C/D/F)',time:'29/6 04:00',note:'Boston',date:'29/6'},
+  {id:'m75',home:'Nhất Bảng F',away:'Morocco',time:'29/6 02:00',note:'Monterrey',date:'29/6'},
+  {id:'m76',home:'Brazil',away:'Nhật Bản',time:'29/6 04:00',note:'Houston',date:'29/6'},
+  {id:'m77',home:'Nhất Bảng I',away:'Top 3 (C/D/F/G/H)',time:'30/6 04:00',note:'New York',date:'30/6'},
+  {id:'m78',home:'Ivory Coast',away:'Nhì Bảng I',time:'30/6 00:00',note:'Dallas',date:'30/6'},
+  {id:'m79',home:'Mexico',away:'Top 3 (C/E/F/H/I)',time:'30/6 04:00',note:'Mexico City',date:'30/6'},
+  {id:'m80',home:'Nhất Bảng L',away:'Top 3 (E/H/I/J/K)',time:'01/7 00:00',note:'Atlanta',date:'01/7'},
+  {id:'m81',home:'USA',away:'Bosnia & Herzegovina',time:'01/7 04:00',note:'San Francisco',date:'01/7'},
+  {id:'m82',home:'Bỉ (Nhất G)',away:'Top 3 (A/E/H/I/J)',time:'01/7 04:00',note:'Seattle',date:'01/7'},
+  {id:'m83',home:'Nhì Bảng K',away:'Nhì Bảng L',time:'02/7 04:00',note:'Toronto',date:'02/7'},
+  {id:'m84',home:'Tây Ban Nha',away:'Nhì Bảng J',time:'02/7 02:00',note:'Los Angeles',date:'02/7'},
+  {id:'m85',home:'Thụy Sĩ',away:'Top 3 (B/C/F/G/H/K)',time:'02/7 06:00',note:'Vancouver',date:'02/7'},
+  {id:'m86',home:'Argentina',away:'Cabo Verde',time:'03/7 05:00',note:'Miami',date:'03/7'},
+  {id:'m87',home:'Nhất Bảng K',away:'Top 3 (...)',time:'03/7 02:30',note:'Kansas City',date:'03/7'},
+  {id:'m88',home:'Nhì Bảng D',away:'Ai Cập (Nhì G)',time:'03/7 01:00',note:'Dallas',date:'03/7'},
+];
+
+const KEY='wc2026_pt_v1';
+let S={pred:{},actual:{},locks:{}};
+
+function load(){try{const d=localStorage.getItem(KEY);if(d)S=JSON.parse(d);}catch(e){}['pred','actual','locks'].forEach(k=>{if(!S[k])S[k]={};});}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast('Lỗi lưu!','err');}}
+
+function toast(msg,t='ok'){
+  const el=document.getElementById('toast');
+  el.className='toast show t-'+(t==='ok'?'ok':'err');
+  el.textContent=msg;
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+function isLocked(mid){
+  if(S.locks[mid])return true;
+  const m=MATCHES.find(x=>x.id===mid);if(!m)return false;
+  const p=m.time.split(' '),dm=p[0].split('/').map(Number),hm=p[1].split(':').map(Number);
+  const mt=new Date(2026,dm[1]-1,dm[0],hm[0],hm[1],0);
+  return new Date()>=new Date(mt.getTime()-10*60*1000);
+}
+
+function go(t){
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['rooms','actual','rank','admin'][i]===t));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  if(t==='rank')renderRank();
+  if(t==='actual')renderActual();
+  if(t==='admin')renderAdmin();
+  if(t==='rooms')renderGrid();
+}
+
+function renderGrid(){
+  const done=ROOMS.filter(r=>S.pred[r.id]&&Object.keys(S.pred[r.id]).length===MATCHES.length).length;
+  document.getElementById('rprog').textContent=done+'/21 phòng đã nhập';
+  document.getElementById('pb').style.width=(done/21*100)+'%';
+  document.getElementById('rg').innerHTML=ROOMS.map(r=>{
+    const ok=S.pred[r.id]&&Object.keys(S.pred[r.id]).length===MATCHES.length;
+    const allLk=MATCHES.every(m=>isLocked(m.id));
+    const cls='rbtn'+(ok?' done':'')+(allLk&&!ok?' lkd':'');
+    const st=ok?`<div class="rst" style="color:var(--ok)">✓ Đã nhập</div>`:
+               allLk?`<div class="rst" style="color:var(--warn)">🔒 Đã khóa</div>`:
+               `<div class="rst" style="color:var(--text3)">Chưa nhập</div>`;
+    return`<button class="${cls}" onclick="openRoom(${r.id})"><div class="rname">${r.room}</div><div class="rrep">${r.rep}</div>${st}</button>`;
+  }).join('');
+}
+
+function openRoom(rid){
+  const r=ROOMS.find(x=>x.id===rid);
+  const allLk=MATCHES.every(m=>isLocked(m.id));
+  if(allLk&&!(S.pred[rid]&&Object.keys(S.pred[rid]).length===MATCHES.length)){toast('Tất cả trận đã khóa!','err');return;}
+  document.getElementById('rl').style.display='none';
+  const fv=document.getElementById('rf');fv.style.display='block';
+  const pr=S.pred[rid]||{},lkc=MATCHES.filter(m=>isLocked(m.id)).length;
+  const days=[...new Set(MATCHES.map(m=>m.date))];
+  let mh='';
+  days.forEach(d=>{
+    mh+=`<div class="dsep">📅 ${d}/2026</div>`;
+    MATCHES.filter(m=>m.date===d).forEach(m=>{
+      const p=pr[m.id]||{h:'',a:''},lk=isLocked(m.id);
+      mh+=`<div class="mi${lk?' lkd':''}">
+        <div class="minfo"><div class="mteams">${m.home} vs ${m.away}${lk?'<span class="ltag">🔒 Khóa</span>':''}</div>
+        <div class="mmeta">${m.time} · ${m.note}</div></div>
+        <div class="sw">
+          <input class="sinp" id="h_${m.id}" type="number" min="0" max="20" value="${p.h}" placeholder="0" ${lk?'disabled':''}>
+          <span class="vsep">-</span>
+          <input class="sinp" id="a_${m.id}" type="number" min="0" max="20" value="${p.a}" placeholder="0" ${lk?'disabled':''}>
+        </div></div>`;
+    });
+  });
+  fv.innerHTML=`<button class="bbk" onclick="closeRoom()">← Quay lại</button>
+    <div class="card" style="margin-bottom:12px">
+      <div style="font-size:16px;font-weight:700">${r.room} — ${r.rep}</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:3px">${lkc?lkc+' trận đã khóa · ':''}Điền tỷ số dự đoán</div>
+    </div>${mh}
+    <button class="btn btn-p" id="svbtn" onclick="savePred(${rid})">💾 Lưu dự đoán</button>`;
+}
+
+function closeRoom(){
+  document.getElementById('rl').style.display='';
+  document.getElementById('rf').style.display='none';
+  document.getElementById('rf').innerHTML='';
+  renderGrid();
+}
+
+function savePred(rid){
+  const pr={};let miss=false;
+  for(const m of MATCHES){
+    if(isLocked(m.id)){const ex=(S.pred[rid]||{})[m.id];if(ex)pr[m.id]=ex;continue;}
+    const h=document.getElementById('h_'+m.id).value,a=document.getElementById('a_'+m.id).value;
+    if(h===''||a===''){miss=true;break;}
+    pr[m.id]={h:parseInt(h),a:parseInt(a)};
+  }
+  if(miss){toast('Điền đủ tỷ số các trận chưa khóa!','err');return;}
+  for(const m of MATCHES){if(isLocked(m.id)&&(S.pred[rid]||{})[m.id]&&!pr[m.id])pr[m.id]=(S.pred[rid]||{})[m.id];}
+  S.pred[rid]=pr;save();
+  toast('✓ Đã lưu — '+ROOMS.find(r=>r.id===rid).room);
+  closeRoom();
+}
+
+function renderActual(){
+  const days=[...new Set(MATCHES.map(m=>m.date))];
+  let h='';
+  days.forEach(d=>{
+    h+=`<div class="dsep">📅 ${d}/2026</div>`;
+    MATCHES.filter(m=>m.date===d).forEach(m=>{
+      const a=(S.actual||{})[m.id]||{h:'',a:''};
+      h+=`<div class="mi"><div class="minfo"><div class="mteams">${m.home} vs ${m.away}</div>
+        <div class="mmeta">${m.time} · ${m.note}</div></div>
+        <div class="sw">
+          <input class="sinp" id="ach_${m.id}" type="number" min="0" max="20" value="${a.h}" placeholder="?">
+          <span class="vsep">-</span>
+          <input class="sinp" id="aca_${m.id}" type="number" min="0" max="20" value="${a.a}" placeholder="?">
+        </div></div>`;
+    });
+  });
+  document.getElementById('af').innerHTML=h;
+}
+
+function saveActual(){
+  let cnt=0;
+  for(const m of MATCHES){
+    const h=document.getElementById('ach_'+m.id).value,a=document.getElementById('aca_'+m.id).value;
+    if(h!==''&&a!==''){S.actual[m.id]={h:parseInt(h),a:parseInt(a)};cnt++;}
+  }
+  save();toast('✓ Đã lưu '+cnt+' kết quả');
+}
+
+function calcPts(rid){
+  const pr=S.pred[rid]||{},ac=S.actual||{};
+  let pts=0,ok=0,tot=0;
+  for(const m of MATCHES){
+    if(!ac[m.id])continue;tot++;
+    const p=pr[m.id];
+    if(!p){pts++;continue;}
+    if(p.h===ac[m.id].h&&p.a===ac[m.id].a)ok++;else pts++;
+  }
+  return{pts,ok,tot};
+}
+
+function renderRank(){
+  const ac=Object.keys(S.actual||{}).length;
+  const rows=ROOMS.map(r=>{const{pts,ok,tot}=calcPts(r.id);return{...r,pts,ok,tot,has:!!(S.pred||{})[r.id]};}).sort((a,b)=>a.pts-b.pts);
+  const tp=rows.reduce((s,x)=>s+(x.has?x.pts:0),0);
+  let h=`<div class="sums">
+    <div class="stat"><div class="sv">${ac}/16</div><div class="sl">Kết quả đã có</div></div>
+    <div class="stat"><div class="sv">${rows.filter(r=>r.has).length}/21</div><div class="sl">Phòng đã nhập</div></div>
+    <div class="stat"><div class="sv">${tp}</div><div class="sl">Tổng điểm</div></div>
+  </div>`;
+  if(ac>0){
+    h+=`<div class="card" style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px">🍽️ Tính tiền bữa tối</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:6px">Nhập tổng chi phí bữa tối (VNĐ)</div>
+      <input class="cinp" id="cinp" type="number" placeholder="vd: 5000000" oninput="calcCost(${tp})">
+      <div id="cdtl"></div>
+    </div>`;
+  }
+  h+=`<div style="overflow-x:auto"><table>
+    <thead><tr><th style="width:30px">#</th><th style="width:80px">Phòng</th><th>Đại diện</th><th style="width:60px">Điểm</th><th style="width:55px">Đúng</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`<tr>
+      <td style="color:var(--text3);font-weight:700">${i+1}</td>
+      <td style="font-weight:700">${r.room}</td>
+      <td style="color:var(--text2)">${r.rep}</td>
+      <td><b>${r.has?r.pts:'—'}</b>${i===0?'🥇':i===1?'🥈':i===2?'🥉':''}</td>
+      <td>${r.has&&r.tot>0?`<span class="tag tok">✓${r.ok}</span>`:'<span style="font-size:11px;color:var(--text3)">—</span>'}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+  document.getElementById('ra').innerHTML=h;
+}
+
+function calcCost(tp){
+  const c=parseFloat(document.getElementById('cinp').value)||0;
+  const el=document.getElementById('cdtl');
+  if(!c||!tp){el.innerHTML='';return;}
+  const perPt=Math.round(c/tp);
+  const rows=ROOMS.map(r=>{const{pts}=calcPts(r.id);return{...r,pts,has:!!(S.pred||{})[r.id]};}).sort((a,b)=>a.pts-b.pts);
+  let d=`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+    <div style="font-size:13px;margin-bottom:8px;color:var(--text2)">1 điểm = <b style="color:var(--text)">${perPt.toLocaleString('vi-VN')}đ</b></div>
+    <table style="font-size:12px"><thead><tr><th>Phòng</th><th>Đại diện</th><th>Điểm</th><th>Phải trả</th></tr></thead><tbody>`;
+  rows.filter(r=>r.has).forEach(r=>{
+    d+=`<tr><td>${r.room}</td><td>${r.rep}</td><td>${r.pts}</td><td><b>${Math.round(r.pts*perPt).toLocaleString('vi-VN')}đ</b></td></tr>`;
+  });
+  d+=`</tbody></table></div>`;
+  el.innerHTML=d;
+}
+
+function renderAdmin(){
+  const days=[...new Set(MATCHES.map(m=>m.date))];
+  let h='';
+  days.forEach(d=>{
+    h+=`<div class="dsep">📅 ${d}/2026</div>`;
+    MATCHES.filter(m=>m.date===d).forEach(m=>{
+      const ml=!!S.locks[m.id],al=isLocked(m.id)&&!ml;
+      h+=`<div class="ar">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:700">${m.home} vs ${m.away}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">${m.time} · ${al?'<span style="color:var(--warn)">Tự động khóa</span>':ml?'<span style="color:var(--err)">Khóa thủ công</span>':'<span style="color:var(--ok)">Đang mở</span>'}</div>
+        </div>
+        <button class="bsm${ml?' red':''}" onclick="${ml?`uLk('${m.id}')`:`lk('${m.id}')`}">${ml?'🔓 Mở':'🔒 Khóa'}</button>
+      </div>`;
+    });
+  });
+  document.getElementById('al').innerHTML=h;
+}
+
+function lk(mid){S.locks[mid]=true;save();renderAdmin();toast('Đã khóa: '+MATCHES.find(m=>m.id===mid).home+' vs '+MATCHES.find(m=>m.id===mid).away);}
+function uLk(mid){delete S.locks[mid];save();renderAdmin();toast('Đã mở khóa');}
+function lockAll(){MATCHES.forEach(m=>S.locks[m.id]=true);save();renderAdmin();toast('Đã khóa tất cả 16 trận');}
+function unlockAll(){S.locks={};save();renderAdmin();toast('Đã mở khóa tất cả');}
+
+load();renderGrid();renderActual();renderAdmin();
+setInterval(renderGrid,60000);
+</script>
+</body>
+</html>
